@@ -1,0 +1,129 @@
+# Versement
+
+Backend de la plateforme SaaS de gestion des versements de bus.
+
+## Prérequis
+
+Avant de commencer, installer :
+
+* Python 3.14
+* PostgreSQL
+* Git
+
+## 1. Cloner le projet
+
+```bash
+git clone <URL_DU_REPOSITORY>
+cd Versement
+```
+
+## 2. Créer l'environnement virtuel
+
+Sous Windows :
+
+```powershell
+py -m venv venv
+```
+
+Activer l'environnement :
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+## 3. Installer les dépendances
+
+```powershell
+py -m pip install -r requirements.txt
+```
+
+## 4. Configurer PostgreSQL
+
+Créer une base de données PostgreSQL :
+
+```sql
+CREATE DATABASE versement;
+```
+
+## 5. Configurer les variables d'environnement
+
+Créer un fichier `.env` à la racine du projet :
+
+```env
+DEBUG=True
+SECRET_KEY=django-insecure-change-this-key
+
+DB_NAME=versement
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+> Adapter `DB_PASSWORD` selon le mot de passe de votre installation PostgreSQL.
+
+## 6. Appliquer les migrations
+
+```powershell
+py manage.py migrate
+```
+
+## 7. Vérifier le projet
+
+```powershell
+py manage.py check
+```
+
+Si aucune erreur n'est affichée, le projet est correctement configuré.
+
+## 8. Lancer le serveur
+
+```powershell
+py manage.py runserver
+```
+
+Le serveur sera disponible à :
+
+```text
+http://127.0.0.1:8000/
+```
+
+## 9. Créer un administrateur
+
+Pour créer un compte administrateur :
+
+```powershell
+py manage.py createsuperuser
+```
+
+Puis accéder à l'administration Django :
+
+```text
+http://127.0.0.1:8000/admin/
+```
+
+## Commandes utiles
+
+Créer les migrations après une modification des modèles :
+
+```powershell
+py manage.py makemigrations
+```
+
+Appliquer les migrations :
+
+```powershell
+py manage.py migrate
+```
+
+Vérifier le projet :
+
+```powershell
+py manage.py check
+```
+
+Lancer le serveur :
+
+```powershell
+py manage.py runserver
+```
