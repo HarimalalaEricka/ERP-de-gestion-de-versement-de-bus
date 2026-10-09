@@ -8,10 +8,22 @@ from .utilisateur import Utilisateur
 
 
 class StatutVersement(models.TextChoices):
-    SOUMIS = "SOUMIS", "Soumis"
+    DECLARE = "DECLARE", "Déclaré"
+    RECU = "RECU", "Reçu (Accusé)"
     VALIDE = "VALIDE", "Validé"
     CONTESTE = "CONTESTE", "Contesté"
+    SOUMIS = "SOUMIS", "Soumis"
     ANNULE = "ANNULE", "Annulé"
+
+
+class MotifEcart(models.TextChoices):
+    PANNE = "PANNE", "Panne"
+    EMBOUTEILLAGE = "EMBOUTEILLAGE", "Embouteillage"
+    ROUTE_BARREE = "ROUTE_BARREE", "Route barrée"
+    PEU_DE_PASSAGERS = "PEU_DE_PASSAGERS", "Peu de passagers"
+    GREVE = "GREVE", "Grève"
+    ACCIDENT = "ACCIDENT", "Accident"
+    AUTRE = "AUTRE", "Autre"
 
 
 class ModePaiement(models.TextChoices):
@@ -65,7 +77,9 @@ class Versement(models.Model):
         default=ModePaiement.ESPECES
     )
 
-    motif = models.TextField(
+    motif = models.CharField(
+        max_length=30,
+        choices=MotifEcart.choices,
         blank=True,
         null=True
     )
@@ -78,15 +92,26 @@ class Versement(models.Model):
     statut = models.CharField(
         max_length=20,
         choices=StatutVersement.choices,
-        default=StatutVersement.SOUMIS
+        default=StatutVersement.DECLARE
     )
 
+    # Chauffeur ayant déclaré le versement
     soumis_par = models.ForeignKey(
         Utilisateur,
         on_delete=models.PROTECT,
         related_name="versements_soumis"
     )
 
+    # Propriétaire ou gérant ayant accusé réception physique des espèces (RF-07a)
+    accuse_par = models.ForeignKey(
+        Utilisateur,
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="versements_accuses"
+    )
+
+    # Validation définitive (RF-10)
     valide_par = models.ForeignKey(
         Utilisateur,
         on_delete=models.SET_NULL,
@@ -97,9 +122,33 @@ class Versement(models.Model):
 
     soumis_le = models.DateTimeField(auto_now_add=True)
 
+    accuse_le = models.DateTimeField(
+        blank=True,
+        null=True
+    )
+
     valide_le = models.DateTimeField(
         blank=True,
         null=True
+    )
+
+    # Verrouillage & écritures rectificatives (RF-12)
+    est_verrouille = models.BooleanField(
+        default=False,
+        help_text="Verrouillé une fois validé. Modification interdite hors écriture rectificative."
+    )
+
+    versement_original = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="rectifications",
+        help_text="Lien vers le versement d'origine si ceci est une écriture rectificative."
+    )
+
+    est_rectificatif = models.BooleanField(
+        default=False
     )
 
     cree_le = models.DateTimeField(auto_now_add=True)

@@ -4,6 +4,7 @@ from django.db import models
 
 from .organisation import Organisation
 from .versement import Versement
+from .chauffeur import Chauffeur
 
 
 class StatutDette(models.TextChoices):
@@ -26,6 +27,14 @@ class Dette(models.Model):
     organisation = models.ForeignKey(
         Organisation,
         on_delete=models.CASCADE,
+        related_name="dettes"
+    )
+
+    chauffeur = models.ForeignKey(
+        Chauffeur,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
         related_name="dettes"
     )
 

@@ -26,14 +26,16 @@ class UtilisateurManager(BaseUserManager):
     Manager personnalisé pour créer les utilisateurs Django.
     """
 
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError("L'adresse email est obligatoire.")
+    def create_user(self, email=None, telephone=None, password=None, **extra_fields):
+        if not email and not telephone:
+            raise ValueError("L'adresse email ou le numéro de téléphone est obligatoire.")
 
-        email = self.normalize_email(email)
+        if email:
+            email = self.normalize_email(email)
 
         user = self.model(
             email=email,
+            telephone=telephone,
             **extra_fields
         )
 
@@ -112,12 +114,17 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
     telephone = models.CharField(
         max_length=30,
         blank=True,
-        null=True
+        null=True,
+        unique=True,
+        db_index=True,
+        help_text="Numéro de téléphone principal (utilisé pour la connexion des chauffeurs)."
     )
 
     email = models.EmailField(
         max_length=150,
-        unique=True
+        unique=True,
+        blank=True,
+        null=True
     )
 
     derniere_connexion_le = models.DateTimeField(

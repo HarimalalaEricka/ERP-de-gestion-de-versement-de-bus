@@ -109,6 +109,13 @@ class Depense(models.Model):
         null=True
     )
 
+    # Rejet avec motif obligatoire (RF-17)
+    motif_refus = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Motif obligatoire en cas de refus/rejet par le propriétaire."
+    )
+
     cree_le = models.DateTimeField(auto_now_add=True)
     modifie_le = models.DateTimeField(auto_now=True)
 

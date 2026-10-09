@@ -99,6 +99,12 @@ class Incident(models.Model):
         null=True
     )
 
+    reponse_proprietaire = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Précisions demandées ou motif de contestation par le propriétaire (RF-20)."
+    )
+
     cree_le = models.DateTimeField(auto_now_add=True)
     modifie_le = models.DateTimeField(auto_now=True)
 

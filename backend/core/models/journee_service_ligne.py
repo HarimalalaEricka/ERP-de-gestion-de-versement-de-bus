@@ -2,6 +2,7 @@ import uuid
 
 from django.db import models
 
+from .organisation import Organisation
 from .journee_service import JourneeService
 from .ligne import Ligne
 
@@ -11,6 +12,14 @@ class JourneeServiceLigne(models.Model):
         primary_key=True,
         default=uuid.uuid4,
         editable=False
+    )
+
+    organisation = models.ForeignKey(
+        Organisation,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="journees_service_lignes"
     )
 
     journee_service = models.ForeignKey(

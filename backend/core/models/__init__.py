@@ -32,6 +32,7 @@ from .journee_service_ligne import JourneeServiceLigne
 from .versement import (
     Versement,
     StatutVersement,
+    MotifEcart,
     ModePaiement,
 )
 
@@ -45,6 +46,12 @@ from .depense import (
     CategorieDepense,
     DepensePayeePar,
     StatutDepense,
+)
+
+from .remboursement import (
+    Remboursement,
+    ModeReglementRemboursement,
+    StatutRemboursement,
 )
 
 from .incident import (
