@@ -1,0 +1,101 @@
+# Versement Mobile
+
+Application mobile de la plateforme SaaS de gestion des versements de bus.
+
+## Technologies
+
+- Ionic
+- Vue.js
+- TypeScript
+- Capacitor
+- Android
+
+## Prérequis
+
+Avant de commencer, installer :
+
+- Node.js (version LTS)
+- npm
+- Git
+- Android Studio
+- Android SDK (via Android Studio)
+
+## 1. Installer les dépendances
+
+Depuis le dossier `mobile` :
+
+```bash
+npm install
+```
+
+## 2. Installer Capacitor
+
+Si Capacitor n'est pas encore installé dans le projet :
+
+```bash
+npm install @capacitor/core
+npm install -D @capacitor/cli
+```
+
+## 3. Préparer Android
+
+Installer le support Android :
+
+```bash
+npm install @capacitor/android
+```
+
+Puis ajouter la plateforme Android une seule fois :
+
+```bash
+npx cap add android
+```
+
+**Remarque :** si la plateforme Android existe déjà dans le dossier `android`, ne relance pas `npx cap add android`.
+
+## 4. Lancer l'application en développement
+
+```bash
+npm run dev
+```
+
+## 5. Construire l'application
+
+Après avoir modifié le code :
+
+```bash
+npm run build
+```
+
+## 6. Synchroniser avec Android
+
+Après la compilation, synchroniser les fichiers et dépendances :
+
+```bash
+npx cap sync android
+```
+
+## 7. Ouvrir Android Studio
+
+```bash
+npx cap open android
+```
+
+Depuis Android Studio, tu peux lancer l'application sur un émulateur ou un appareil Android connecté.
+
+## Commandes utiles
+
+| Commande | Utilité |
+|---|---|
+| `npm install` | Installer les dépendances |
+| `npm run dev` | Lancer le serveur de développement |
+| `npm run build` | Compiler l'application web |
+| `npx cap sync android` | Synchroniser avec Android |
+| `npx cap open android` | Ouvrir le projet Android |
+
+## Fichiers importants
+
+- `package.json` : dépendances et scripts du projet.
+- `package-lock.json` : versions exactes des dépendances installées.
+- `capacitor.config.ts` : configuration de Capacitor.
+- `android/` : projet natif Android généré par Capacitor.

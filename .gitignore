@@ -3,6 +3,8 @@
 # =========================
 
 backend/venv/
+backend/.venv/
+backend/env/
 backend/__pycache__/
 backend/**/__pycache__/
 backend/*.py[cod]
@@ -10,20 +12,61 @@ backend/**/*.py[cod]
 
 # Variables d'environnement
 backend/.env
+backend/.env.*
 
 # Base SQLite locale
 backend/db.sqlite3
 
+# Fichiers générés par Django
+backend/staticfiles/
+
 
 # =========================
-# Frontend
+# Mobile - Ionic / Vue / Capacitor
 # =========================
 
-frontend/node_modules/
-frontend/dist/
-frontend/.env
-frontend/.env.local
-frontend/.env.*.local
+mobile/node_modules/
+mobile/dist/
+mobile/.env
+mobile/.env.local
+mobile/.env.*.local
+
+# Fichiers et dossiers Ionic
+mobile/.ionic/
+mobile/.sass-cache/
+mobile/.sourcemaps/
+mobile/.versions/
+mobile/www/
+mobile/platforms/
+mobile/plugins/
+
+# Fichiers générés et journaux npm
+mobile/coverage/
+mobile/npm-debug.log*
+mobile/*.log
+
+# Android / Gradle
+mobile/**/.gradle/
+mobile/**/build/
+mobile/android/local.properties
+
+# Clés privées Android
+mobile/**/*.jks
+mobile/**/*.keystore
+
+
+# =========================
+# Fichiers temporaires
+# =========================
+
+*~
+*.sw[mnpcod]
+.tmp
+*.tmp
+*.tmp.*
+*.log
+log.txt
+npm-debug.log*
 
 
 # =========================
@@ -31,6 +74,7 @@ frontend/.env.*.local
 # =========================
 
 .vscode/
+!.vscode/extensions.json
 .idea/
 
 
@@ -40,3 +84,15 @@ frontend/.env.*.local
 
 .DS_Store
 Thumbs.db
+UserInterfaceState.xcuserstate
+$RECYCLE.BIN/
+
+
+# =========================
+# Fichiers générés divers
+# =========================
+
+.sass-cache/
+.sourcemaps/
+.versions/
+coverage/
