@@ -104,8 +104,8 @@ const { t, locale } = useI18n();
 const router = useRouter();
 const authStore = useAuthStore();
 
-const telephone = ref('034 12 345 67');
-const password = ref('123456');
+const telephone = ref('0340987654');
+const password = ref('password');
 
 const currentLocale = computed(() => locale.value);
 
