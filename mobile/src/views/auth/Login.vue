@@ -72,7 +72,7 @@
         </div>
 
         <div class="demo-hint ion-text-center">
-          <p class="hint-text">ℹ️ Mode démo chauffeur activé par défaut</p>
+          <p class="hint-text">Mode démo chauffeur activé par défaut</p>
         </div>
       </div>
     </ion-content>
