@@ -18,7 +18,7 @@
 - Git : `main` (protégée) + branches `feat/xxx`, PR obligatoires avec 1 review (par le dev non-auteur du module si possible)
 - Definition of Done : code review ✅ + tests passent ✅ + migration BDD réversible ✅ + doc API mise à jour ✅ + critères perf/mobile respectés ✅
 - Daily standup 15 min (message vocal accepté), rétro en fin de sprint
-- Stack proposée (CDC §8) : **PostgreSQL + API REST (Laravel ou Django) + PWA React** — à trancher en S0
+- Stack validée : **PostgreSQL + Django (Backend D1) + Ionic Vue 3 & Capacitor (Mobile Chauffeur D2)**
 
 ---
 
@@ -43,8 +43,8 @@
 
 #### Organisation / transverse
 - [ ] **[TOUS]** Réunion de kickoff : lecture du CDC validé v1.0, alignement sur les objectifs et KPI
-- [ ] **[D1]** Trancher la stack backend (Laravel vs Django) + justification écrite (1 page)
-- [ ] **[D2]** Trancher le frontend (React PWA vs Flutter) + prototype de saisie en 3 étapes sur petit écran Android
+- [x] **[D1]** Trancher la stack backend : **Django** validé (modèles créés et migrés)
+- [x] **[D2]** Trancher le frontend mobile : **Ionic 9 + Vue.js 3 + Capacitor** validé (projet initialisé) + prototype de saisie en 3 étapes sur petit écran Android
 - [ ] **[D3]** Choisir lib de graphiques/dashboard + maquette filaire des écrans propriétaire (papier ou Figma)
 - [ ] **[TOUS]** Mettre en place : repo Git, environnements dev (local + staging), règles de protection de branche
 - [ ] **[TOUS]** Définir les conventions : nommage, langue du code (anglais), messages de commit, format des PR
@@ -92,7 +92,7 @@
 - [ ] Upload fichiers sécurisé : whitelist types, taille max, renommage, hors webroot, strip EXIF [SEC-07]
 
 #### D2 — Mobile Chauffeur
-- [ ] Squelette PWA : navigation, gestion de session, bascule FR/MG
+- [ ] Squelette mobile Ionic / Capacitor : navigation, gestion de session, bascule FR/MG
 - [ ] Écrans : login OTP, liste de ses bus, profil
 - [ ] Déclaration journée de service : lignes effectuées (début/fin) [RF-05/06]
 - [ ] Saisie d'un versement en 3 étapes [RF-07] — **version simple d'abord, sans accusé**
