@@ -196,6 +196,7 @@ const handleLogin = async () => {
   --background: #f8fafc;
   --border-radius: 10px;
   margin-bottom: 8px;
+  color: #1a202c;
 }
 
 .submit-button {
