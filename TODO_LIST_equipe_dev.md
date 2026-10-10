@@ -92,11 +92,11 @@
 - [ ] Upload fichiers sécurisé : whitelist types, taille max, renommage, hors webroot, strip EXIF [SEC-07]
 
 #### D2 — Mobile Chauffeur
-- [ ] Squelette mobile Ionic / Capacitor : navigation, gestion de session, bascule FR/MG
-- [ ] Écrans : login OTP, liste de ses bus, profil
-- [ ] Déclaration journée de service : lignes effectuées (début/fin) [RF-05/06]
-- [ ] Saisie d'un versement en 3 étapes [RF-07] — **version simple d'abord, sans accusé**
-- [ ] File d'attente locale : une saisie non envoyée n'est jamais perdue
+- [x] Squelette mobile Ionic / Capacitor : navigation, gestion de session, bascule FR/MG
+- [x] Écrans : login OTP / mot de passe, bus assigné, profil
+- [x] Déclaration journée de service : lignes effectuées (début/fin de service) [RF-05/06]
+- [x] Saisie d'un versement en 3 étapes [RF-07] : bus/ligne, montant versé + calcul écart + motif, confirmation
+- [x] File d'attente locale : stockage local hors-ligne en cas de réseau dégradé
 
 #### D3 — Web Propriétaire
 - [ ] Squelette web : auth, layout, gestion des rôles (propriétaire/gérant)
