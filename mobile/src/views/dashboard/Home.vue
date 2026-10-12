@@ -103,8 +103,10 @@
           <h3>{{ t('dashboard.myDebts') }}</h3>
         </div>
         <div class="info-card-body">
-          <span class="debt-amount">0 Ar</span>
-          <span class="debt-status text-success">Aucune dette reportée</span>
+          <span class="debt-amount">{{ formatMontant(authStore.totalDettes) }}</span>
+          <span class="debt-status" :class="authStore.totalDettes > 0 ? 'text-danger' : 'text-success'">
+            {{ authStore.totalDettes > 0 ? 'Dettes en attente de régularisation' : 'Aucune dette reportée' }}
+          </span>
         </div>
       </div>
     </ion-content>
@@ -112,7 +114,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import {
@@ -123,7 +125,8 @@ import {
   IonContent,
   IonButton,
   IonIcon,
-  toastController
+  toastController,
+  onIonViewDidEnter
 } from '@ionic/vue';
 import {
   busOutline,
@@ -162,6 +165,14 @@ const formatMontant = (val: number) => {
 const toggleService = () => {
   isServiceStarted.value = !isServiceStarted.value;
 };
+
+onMounted(() => {
+  authStore.fetchMonBus();
+});
+
+onIonViewDidEnter(() => {
+  authStore.fetchMonBus();
+});
 
 const startVersement = () => {
   if (authStore.activeBus) {

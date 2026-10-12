@@ -1,7 +1,9 @@
+
 import uuid
 
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.core.exceptions import ValidationError
 from django.db import models
 
 from .organisation import Organisation
@@ -22,16 +24,37 @@ class StatutUtilisateur(models.TextChoices):
 
 
 class UtilisateurManager(BaseUserManager):
-    """
-    Manager personnalisé pour créer les utilisateurs Django.
-    """
+    """Manager personnalisé pour créer les utilisateurs Django."""
 
-    def create_user(self, email=None, telephone=None, password=None, **extra_fields):
+    def create_user(
+        self,
+        email=None,
+        telephone=None,
+        password=None,
+        **extra_fields
+    ):
         if not email and not telephone:
-            raise ValueError("L'adresse email ou le numéro de téléphone est obligatoire.")
+            raise ValueError(
+                "L'adresse email ou le numéro de téléphone est obligatoire."
+            )
 
         if email:
             email = self.normalize_email(email)
+
+        organisation = extra_fields.get("organisation")
+
+        if organisation is not None and not isinstance(
+            organisation, Organisation
+        ):
+            try:
+                organisation = Organisation.objects.get(pk=organisation)
+            except (Organisation.DoesNotExist, ValidationError, ValueError):
+                raise ValueError(
+                    "L'organisation fournie n'existe pas ou son identifiant "
+                    "est invalide."
+                )
+
+            extra_fields["organisation"] = organisation
 
         user = self.model(
             email=email,
@@ -45,20 +68,24 @@ class UtilisateurManager(BaseUserManager):
             user.set_unusable_password()
 
         user.save(using=self._db)
-
         return user
 
-    def create_superuser(self, email, password=None, **extra_fields):
+    def create_superuser(
+        self,
+        email,
+        password=None,
+        **extra_fields
+    ):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
 
-        if not extra_fields.get("is_staff"):
+        if extra_fields.get("is_staff") is not True:
             raise ValueError(
                 "Un superutilisateur doit avoir is_staff=True."
             )
 
-        if not extra_fields.get("is_superuser"):
+        if extra_fields.get("is_superuser") is not True:
             raise ValueError(
                 "Un superutilisateur doit avoir is_superuser=True."
             )
@@ -71,14 +98,7 @@ class UtilisateurManager(BaseUserManager):
 
 
 class Utilisateur(AbstractBaseUser, PermissionsMixin):
-    """
-    Utilisateur de l'application.
-
-    L'authentification Django se fait avec :
-        email + mot de passe
-
-    L'email est globalement unique dans l'application.
-    """
+    """Utilisateur de l'application, authentifié par email et mot de passe."""
 
     id = models.UUIDField(
         primary_key=True,
@@ -103,13 +123,8 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
         default=StatutUtilisateur.ACTIF
     )
 
-    prenom = models.CharField(
-        max_length=100
-    )
-
-    nom = models.CharField(
-        max_length=100
-    )
+    prenom = models.CharField(max_length=100)
+    nom = models.CharField(max_length=100)
 
     telephone = models.CharField(
         max_length=30,
@@ -117,7 +132,10 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
         null=True,
         unique=True,
         db_index=True,
-        help_text="Numéro de téléphone principal (utilisé pour la connexion des chauffeurs)."
+        help_text=(
+            "Numéro de téléphone principal "
+            "(utilisé pour la connexion des chauffeurs)."
+        )
     )
 
     email = models.EmailField(
@@ -132,23 +150,11 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
         null=True
     )
 
-    cree_le = models.DateTimeField(
-        auto_now_add=True
-    )
+    cree_le = models.DateTimeField(auto_now_add=True)
+    modifie_le = models.DateTimeField(auto_now=True)
 
-    modifie_le = models.DateTimeField(
-        auto_now=True
-    )
-
-    # Django utilise ces champs pour ses permissions.
-    # Ils sont différents du "statut" métier.
-    is_staff = models.BooleanField(
-        default=False
-    )
-
-    is_active = models.BooleanField(
-        default=True
-    )
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     objects = UtilisateurManager()
 
@@ -163,7 +169,6 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         db_table = "utilisateurs"
-
         indexes = [
             models.Index(
                 fields=["organisation", "role"],

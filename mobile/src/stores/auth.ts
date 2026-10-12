@@ -24,6 +24,7 @@ export const useAuthStore = defineStore('auth', {
     token: localStorage.getItem('auth_token') as string | null,
     user: JSON.parse(localStorage.getItem('auth_user') || 'null') as User | null,
     activeBus: JSON.parse(localStorage.getItem('active_bus') || 'null') as BusSummary | null,
+    totalDettes: Number(localStorage.getItem('total_dettes') || 0),
     isLoading: false,
     error: null as string | null
   }),
@@ -103,6 +104,22 @@ export const useAuthStore = defineStore('auth', {
       // }
     },
 
+    async fetchMonBus() {
+      try {
+        const response = await apiClient.get('/chauffeur/mon-bus/');
+        if (response.data.bus) {
+          this.activeBus = response.data.bus;
+          localStorage.setItem('active_bus', JSON.stringify(this.activeBus));
+        }
+        if (typeof response.data.total_dettes === 'number') {
+          this.totalDettes = response.data.total_dettes;
+          localStorage.setItem('total_dettes', String(this.totalDettes));
+        }
+      } catch (err) {
+        console.warn('Impossible de rafraîchir le bus / dettes :', err);
+      }
+    },
+
     setActiveBus(bus: BusSummary | null) {
       this.activeBus = bus;
       if (bus) {
@@ -116,9 +133,11 @@ export const useAuthStore = defineStore('auth', {
       this.token = null;
       this.user = null;
       this.activeBus = null;
+      this.totalDettes = 0;
       localStorage.removeItem('auth_token');
       localStorage.removeItem('auth_user');
       localStorage.removeItem('active_bus');
+      localStorage.removeItem('total_dettes');
     }
   }
 });

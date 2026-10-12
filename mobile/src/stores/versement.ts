@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import apiClient from '../services/api';
+import { useAuthStore } from './auth';
 
 export interface VersementDraft {
   busId: string;
@@ -105,6 +106,8 @@ export const useVersementStore = defineStore('versement', {
         });
 
         this.submissionSuccess = true;
+        const authStore = useAuthStore();
+        await authStore.fetchMonBus();
       } catch (error: any) {
         // En cas d'absence de réseau ou d'erreur serveur, sauvegarde dans la file locale
         console.warn('Enregistrement en local (mode hors-ligne):', error.message);
@@ -122,6 +125,31 @@ export const useVersementStore = defineStore('versement', {
         this.submissionSuccess = true;
       } finally {
         this.isSubmitting = false;
+      }
+    },
+
+    async syncOfflineQueue() {
+      if (this.offlineQueue.length === 0) return;
+      try {
+        await apiClient.post('/versements/sync/', {
+          versements: this.offlineQueue.map(item => ({
+            busId: item.busId,
+            montantVerse: item.montantVerse,
+            montantAttendu: item.montantAttendu,
+            motifEcart: item.motifEcart,
+            commentaire: item.commentaire,
+            dateVersement: item.dateVersement,
+            localId: item.localId
+          }))
+        });
+
+        this.offlineQueue = [];
+        localStorage.removeItem('offline_versements');
+
+        const authStore = useAuthStore();
+        await authStore.fetchMonBus();
+      } catch (err) {
+        console.warn('Échec de la synchronisation de la file hors-ligne :', err);
       }
     },
 
