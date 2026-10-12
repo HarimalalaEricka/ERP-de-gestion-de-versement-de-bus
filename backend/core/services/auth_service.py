@@ -63,7 +63,9 @@ def connecter_utilisateur(telephone, password):
                 "id": str(bus.id),
                 "organisation_id": str(bus.organisation_id),
                 "numero_immatriculation": bus.numero_immatriculation,
+                "immatriculation": bus.numero_immatriculation,
                 "modele": bus.modele,
+                "marqueModele": bus.modele,
                 "annee_fabrication": bus.annee_fabrication,
                 "statut": bus.statut,
                 "cree_le": bus.cree_le.isoformat() if bus.cree_le else None,
@@ -112,6 +114,8 @@ def connecter_utilisateur(telephone, password):
                     },
                 }
                 bus_data["ligne"] = ligne_data
+                bus_data["ligneNom"] = ligne.nom
+                bus_data["montantAttenduJour"] = float(montant_du_jour) if montant_du_jour is not None else 120000.0
 
     return {
         "access": str(refresh.access_token),

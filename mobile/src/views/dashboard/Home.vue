@@ -25,12 +25,12 @@
         <div class="bus-main-info">
           <div class="bus-plate">
             <ion-icon :icon="busOutline" class="plate-icon" />
-            <h2>{{ authStore.activeBus?.numero_immatriculation || '1234 TAB' }}</h2>
+            <h2>{{ authStore.activeBus?.immatriculation || '1234 TAB' }}</h2>
           </div>
-          <p class="bus-model">{{ authStore.activeBus?.modele || 'Mercedes Sprinter' }}</p>
+          <p class="bus-model">{{ authStore.activeBus?.marqueModele || 'Mercedes Sprinter' }}</p>
           <div class="bus-line">
             <ion-icon :icon="navigateOutline" class="line-icon" />
-            <span>{{ authStore.activeBus?.ligne?.nom || 'Ligne 133' }}</span>
+            <span>{{ authStore.activeBus?.ligneNom || 'Ligne 133' }}</span>
           </div>
         </div>
 
@@ -72,7 +72,7 @@
             <div class="huge-action-text">
               <span class="huge-action-title">{{ t('dashboard.declareVersement') }}</span>
               <span class="huge-action-sub">
-                {{ t('versement.expectedAmount') }} : {{ formatMontant(authStore.activeBus?.ligne.montant_attendu || 120000) }}
+                {{ t('versement.expectedAmount') }} : {{ formatMontant(authStore.activeBus?.montantAttenduJour || 120000) }}
               </span>
             </div>
           </div>

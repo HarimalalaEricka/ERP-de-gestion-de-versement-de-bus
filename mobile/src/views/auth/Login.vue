@@ -58,6 +58,10 @@
             />
           </ion-item>
 
+          <ion-text color="danger" v-if="authStore.error">
+            <p class="error-msg ion-text-center">{{ authStore.error }}</p>
+          </ion-text>
+
           <ion-button
             expand="block"
             size="large"
@@ -90,7 +94,8 @@ import {
   IonInput,
   IonButton,
   IonIcon,
-  IonSpinner
+  IonSpinner,
+  IonText
 } from '@ionic/vue';
 import {
   busOutline,
@@ -116,7 +121,9 @@ const switchLocale = (lang: string) => {
 
 const handleLogin = async () => {
   await authStore.login(telephone.value, password.value);
-  router.replace('/tabs/home');
+  if (authStore.isAuthenticated) {
+    router.replace('/tabs/home');
+  }
 };
 </script>
 
