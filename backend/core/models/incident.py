@@ -110,3 +110,13 @@ class Incident(models.Model):
 
     class Meta:
         db_table = "incidents"
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(type__in=TypeIncident.values),
+                name="incident_type_check"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(statut__in=StatutIncident.values),
+                name="incident_statut_check"
+            ),
+        ]

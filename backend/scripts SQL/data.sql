@@ -116,7 +116,7 @@ INSERT INTO regles_versement(
 ) VALUES (
     gen_random_uuid(),
     'SEMAINE',
-    100000.00,
+    210000.00,
     NOW(),
     (SELECT id FROM bus WHERE numero_immatriculation = '1234ABCD'),
     (SELECT id FROM lignes WHERE nom = 'Ligne 1'),

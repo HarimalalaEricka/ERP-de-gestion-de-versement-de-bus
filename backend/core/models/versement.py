@@ -163,5 +163,22 @@ class Versement(models.Model):
                     & models.Q(montant_verse__gte=0)
                 ),
                 name="versement_montant_check"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(
+                    mode_paiement__in=ModePaiement.values
+                ),
+                name="versement_mode_paiement_check"
+            ),
+            models.CheckConstraint(
+                condition=(
+                    models.Q(motif__isnull=True)
+                    | models.Q(motif__in=MotifEcart.values)
+                ),
+                name="versement_motif_check"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(statut__in=StatutVersement.values),
+                name="versement_statut_check"
             )
         ]

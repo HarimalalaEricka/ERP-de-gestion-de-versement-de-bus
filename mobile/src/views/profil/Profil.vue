@@ -33,7 +33,7 @@
             <ion-icon :icon="businessOutline" slot="start" color="medium" />
             <ion-label>
               <h3>{{ t('profil.organization') }}</h3>
-              <p>{{ authStore.user?.organisationNom || 'Coopérative Miray' }}</p>
+              <p>{{ authStore.user?.organisation?.nom || 'Coopérative Miray' }}</p>
             </ion-label>
           </ion-item>
         </ion-list>
@@ -108,6 +108,7 @@ const router = useRouter();
 const authStore = useAuthStore();
 
 const selectedLanguage = ref(locale.value);
+console.log(authStore.user.organisation);
 
 const onLanguageChange = (e: any) => {
   const newLang = e.detail.value;

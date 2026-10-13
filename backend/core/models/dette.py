@@ -83,5 +83,9 @@ class Dette(models.Model):
                     )
                 ),
                 name="dette_montant_check"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(statut__in=StatutDette.values),
+                name="dette_statut_check"
             )
         ]

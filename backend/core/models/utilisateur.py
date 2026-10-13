@@ -179,6 +179,16 @@ class Utilisateur(AbstractBaseUser, PermissionsMixin):
                 name="idx_utilisateur_org_statut"
             ),
         ]
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(role__in=RoleUtilisateur.values),
+                name="utilisateur_role_check"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(statut__in=StatutUtilisateur.values),
+                name="utilisateur_statut_check"
+            ),
+        ]
 
     def __str__(self):
         return f"{self.prenom} {self.nom} ({self.email})"

@@ -72,5 +72,11 @@ class JourneeService(models.Model):
                     "date_service"
                 ],
                 name="journee_service_unique"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(
+                    statut__in=StatutJourneeService.values
+                ),
+                name="journee_service_statut_check"
             )
         ]

@@ -40,6 +40,7 @@
             expand="block"
             color="success"
             class="service-btn"
+            :disabled="isUpdatingService"
             @click="toggleService"
           >
             <ion-icon :icon="playOutline" slot="start" />
@@ -51,6 +52,7 @@
             fill="outline"
             color="medium"
             class="service-btn"
+            :disabled="isUpdatingService"
             @click="toggleService"
           >
             <ion-icon :icon="stopOutline" slot="start" />
@@ -147,7 +149,10 @@ const router = useRouter();
 const authStore = useAuthStore();
 const versementStore = useVersementStore();
 
-const isServiceStarted = ref(true);
+const isUpdatingService = ref(false);
+const isServiceStarted = computed(() => (
+  authStore.activeBus?.statut === 'EN_SERVICE'
+));
 
 const todayFormatted = computed(() => {
   const d = new Date();
@@ -162,8 +167,36 @@ const formatMontant = (val: number) => {
   return new Intl.NumberFormat('fr-MG').format(val) + ' Ar';
 };
 
-const toggleService = () => {
-  isServiceStarted.value = !isServiceStarted.value;
+const toggleService = async () => {
+  if (!authStore.activeBus || isUpdatingService.value) {
+    return;
+  }
+
+  isUpdatingService.value = true;
+  const nouveauStatut = isServiceStarted.value ? 'ARRETE' : 'EN_SERVICE';
+
+  try {
+    await authStore.updateBusStatus(nouveauStatut);
+    const toast = await toastController.create({
+      message: isServiceStarted.value
+        ? 'Le service du bus a démarré.'
+        : 'Le service du bus a été arrêté.',
+      duration: 2000,
+      position: 'bottom'
+    });
+    await toast.present();
+  } catch (error: any) {
+    console.error('Impossible de modifier le statut du bus :', error);
+    const toast = await toastController.create({
+      message: error.response?.data?.detail || 'Impossible de modifier le statut du bus.',
+      duration: 2500,
+      position: 'bottom',
+      color: 'danger'
+    });
+    await toast.present();
+  } finally {
+    isUpdatingService.value = false;
+  }
 };
 
 onMounted(() => {

@@ -103,6 +103,16 @@ class Remboursement(models.Model):
             models.CheckConstraint(
                 condition=models.Q(montant__gt=0),
                 name="remboursement_montant_check"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(
+                    mode_reglement__in=ModeReglementRemboursement.values
+                ),
+                name="remboursement_mode_reglement_check"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(statut__in=StatutRemboursement.values),
+                name="remboursement_statut_check"
             )
         ]
 

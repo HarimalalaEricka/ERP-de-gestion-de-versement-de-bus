@@ -64,6 +64,12 @@ class Bus(models.Model):
                     | models.Q(annee_fabrication__gte=1900)
                 ),
                 name="bus_annee_check"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(
+                    statut__in=StatutBus.values
+                ),
+                name="bus_statut_check"
             )
         ]
 

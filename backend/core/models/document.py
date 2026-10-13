@@ -59,3 +59,11 @@ class Document(models.Model):
 
     class Meta:
         db_table = "documents"
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(
+                    type_document__in=TypeDocument.values
+                ),
+                name="document_type_check"
+            ),
+        ]

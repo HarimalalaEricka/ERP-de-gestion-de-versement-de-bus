@@ -5,7 +5,7 @@
         <ion-buttons slot="start">
           <ion-back-button default-href="/tabs/home" :text="t('common.back')" />
         </ion-buttons>
-        <ion-title>{{ t('versement.title') }}</ion-title>
+        <ion-title>{{ t("versement.title") }}</ion-title>
       </ion-toolbar>
     </ion-header>
 
@@ -14,53 +14,70 @@
       <div class="steps-progress" v-if="!versementStore.submissionSuccess">
         <div class="step-indicator" :class="{ active: versementStore.currentStep >= 1 }">
           <span class="step-number">1</span>
-          <span class="step-label">{{ t('versement.step1Title') }}</span>
+          <span class="step-label">{{ t("versement.step1Title") }}</span>
         </div>
         <div class="step-line" :class="{ filled: versementStore.currentStep >= 2 }"></div>
         <div class="step-indicator" :class="{ active: versementStore.currentStep >= 2 }">
           <span class="step-number">2</span>
-          <span class="step-label">{{ t('versement.step2Title') }}</span>
+          <span class="step-label">{{ t("versement.step2Title") }}</span>
         </div>
         <div class="step-line" :class="{ filled: versementStore.currentStep >= 3 }"></div>
         <div class="step-indicator" :class="{ active: versementStore.currentStep >= 3 }">
           <span class="step-number">3</span>
-          <span class="step-label">{{ t('versement.step3Title') }}</span>
+          <span class="step-label">{{ t("versement.step3Title") }}</span>
         </div>
       </div>
 
       <!-- ================= ÉTAPE 1 : BUS & LIGNE ================= -->
-      <div v-if="versementStore.currentStep === 1 && !versementStore.submissionSuccess" class="step-card">
-        <h2 class="step-heading">{{ t('versement.step1Title') }}</h2>
-        <p class="step-subheading">{{ t('versement.step1Subtitle') }}</p>
+      <div
+        v-if="versementStore.currentStep === 1 && !versementStore.submissionSuccess"
+        class="step-card"
+      >
+        <h2 class="step-heading">{{ t("versement.step1Title") }}</h2>
+        <p class="step-subheading">{{ t("versement.step1Subtitle") }}</p>
 
         <div class="info-block">
           <div class="info-row">
-            <span class="info-label">{{ t('versement.bus') }}</span>
-            <span class="info-value highlight">{{ versementStore.draft.immatriculation || '1234 TAB' }}</span>
+            <span class="info-label">{{ t("versement.bus") }}</span>
+            <span class="info-value highlight">{{
+              versementStore.draft.immatriculation || "1234 TAB"
+            }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label">{{ t('versement.lineLabel') }}</span>
-            <span class="info-value">{{ versementStore.draft.ligneNom || 'Ligne 133' }}</span>
+            <span class="info-label">{{ t("versement.lineLabel") }}</span>
+            <span class="info-value">{{
+              versementStore.draft.ligneNom || "Ligne 133"
+            }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label">{{ t('versement.expectedAmount') }}</span>
-            <span class="info-value amount-expected">{{ formatMontant(versementStore.draft.montantAttendu) }}</span>
+            <span class="info-label">{{ t("versement.expectedAmount") }}</span>
+            <span class="info-value amount-expected">{{
+              formatMontant(versementStore.draft.montantAttendu)
+            }}</span>
           </div>
         </div>
 
-        <ion-button expand="block" size="large" class="step-btn ion-margin-top" @click="versementStore.nextStep">
-          {{ t('common.next') }}
+        <ion-button
+          expand="block"
+          size="large"
+          class="step-btn ion-margin-top"
+          @click="versementStore.nextStep"
+        >
+          {{ t("common.next") }}
           <ion-icon :icon="arrowForwardOutline" slot="end" />
         </ion-button>
       </div>
 
       <!-- ================= ÉTAPE 2 : MONTANT VERSÉ ================= -->
-      <div v-else-if="versementStore.currentStep === 2 && !versementStore.submissionSuccess" class="step-card">
-        <h2 class="step-heading">{{ t('versement.step2Title') }}</h2>
-        <p class="step-subheading">{{ t('versement.step2Subtitle') }}</p>
+      <div
+        v-else-if="versementStore.currentStep === 2 && !versementStore.submissionSuccess"
+        class="step-card"
+      >
+        <h2 class="step-heading">{{ t("versement.step2Title") }}</h2>
+        <p class="step-subheading">{{ t("versement.step2Subtitle") }}</p>
 
         <div class="amount-input-box">
-          <label class="input-label">{{ t('versement.actualAmount') }} (Ariary)</label>
+          <label class="input-label">{{ t("versement.actualAmount") }} (Ariary)</label>
           <ion-item lines="none" class="amount-field">
             <ion-input
               v-model.number="inputMontant"
@@ -84,20 +101,33 @@
         </div>
 
         <!-- Calcul de l'écart automatique -->
-        <div v-if="versementStore.draft.montantVerse > 0" class="ecart-card" :class="ecartClass">
+        <div
+          v-if="versementStore.draft.montantVerse > 0"
+          class="ecart-card"
+          :class="ecartClass"
+        >
           <div class="ecart-header">
-            <span>{{ t('versement.difference') }} :</span>
-            <strong class="ecart-value">{{ formatMontant(versementStore.draft.ecart) }}</strong>
+            <span>{{ t("versement.difference") }} :</span>
+            <strong class="ecart-value">{{
+              formatMontant(versementStore.draft.ecart)
+            }}</strong>
           </div>
           <p class="ecart-desc">
-            {{ versementStore.hasDeficit ? t('versement.differenceDeficit') : t('versement.differenceSurplus') }}
+            {{
+              versementStore.hasDeficit
+                ? t("versement.differenceDeficit")
+                : t("versement.differenceSurplus")
+            }}
           </p>
         </div>
 
         <!-- Motif obligatoire si écart négatif -->
-        <div v-if="versementStore.hasDeficit && versementStore.draft.montantVerse > 0" class="reason-section ion-margin-top">
+        <div
+          v-if="versementStore.hasDeficit && versementStore.draft.montantVerse > 0"
+          class="reason-section ion-margin-top"
+        >
           <label class="reason-label text-danger">
-            ⚠️ {{ t('versement.reasonRequired') }}
+            ⚠️ {{ t("versement.reasonRequired") }}
           </label>
           <ion-item lines="inset" class="custom-select-item">
             <ion-select
@@ -106,12 +136,24 @@
               interface="action-sheet"
               class="reason-select"
             >
-              <ion-select-option value="traffic">{{ t('versement.reasons.traffic') }}</ion-select-option>
-              <ion-select-option value="weather">{{ t('versement.reasons.weather') }}</ion-select-option>
-              <ion-select-option value="breakdown">{{ t('versement.reasons.breakdown') }}</ion-select-option>
-              <ion-select-option value="police">{{ t('versement.reasons.police') }}</ion-select-option>
-              <ion-select-option value="low_passengers">{{ t('versement.reasons.low_passengers') }}</ion-select-option>
-              <ion-select-option value="other">{{ t('versement.reasons.other') }}</ion-select-option>
+              <ion-select-option value="traffic">{{
+                t("versement.reasons.traffic")
+              }}</ion-select-option>
+              <ion-select-option value="weather">{{
+                t("versement.reasons.weather")
+              }}</ion-select-option>
+              <ion-select-option value="breakdown">{{
+                t("versement.reasons.breakdown")
+              }}</ion-select-option>
+              <ion-select-option value="police">{{
+                t("versement.reasons.police")
+              }}</ion-select-option>
+              <ion-select-option value="low_passengers">{{
+                t("versement.reasons.low_passengers")
+              }}</ion-select-option>
+              <ion-select-option value="other">{{
+                t("versement.reasons.other")
+              }}</ion-select-option>
             </ion-select>
           </ion-item>
 
@@ -126,7 +168,7 @@
 
         <div class="wizard-actions ion-margin-top">
           <ion-button fill="outline" color="medium" @click="versementStore.prevStep">
-            {{ t('common.back') }}
+            {{ t("common.back") }}
           </ion-button>
           <ion-button
             color="primary"
@@ -134,47 +176,52 @@
             :disabled="!versementStore.isStep2Valid"
             @click="versementStore.nextStep"
           >
-            {{ t('common.next') }}
+            {{ t("common.next") }}
             <ion-icon :icon="arrowForwardOutline" slot="end" />
           </ion-button>
         </div>
       </div>
 
       <!-- ================= ÉTAPE 3 : CONFIRMATION ================= -->
-      <div v-else-if="versementStore.currentStep === 3 && !versementStore.submissionSuccess" class="step-card">
-        <h2 class="step-heading">{{ t('versement.step3Title') }}</h2>
-        <p class="step-subheading">{{ t('versement.step3Subtitle') }}</p>
+      <div
+        v-else-if="versementStore.currentStep === 3 && !versementStore.submissionSuccess"
+        class="step-card"
+      >
+        <h2 class="step-heading">{{ t("versement.step3Title") }}</h2>
+        <p class="step-subheading">{{ t("versement.step3Subtitle") }}</p>
 
         <div class="summary-card">
           <div class="summary-row">
-            <span>{{ t('versement.bus') }}</span>
+            <span>{{ t("versement.bus") }}</span>
             <strong>{{ versementStore.draft.immatriculation }}</strong>
           </div>
           <div class="summary-row">
-            <span>{{ t('versement.lineLabel') }}</span>
+            <span>{{ t("versement.lineLabel") }}</span>
             <span>{{ versementStore.draft.ligneNom }}</span>
           </div>
           <div class="summary-row">
-            <span>{{ t('versement.expectedAmount') }}</span>
+            <span>{{ t("versement.expectedAmount") }}</span>
             <span>{{ formatMontant(versementStore.draft.montantAttendu) }}</span>
           </div>
           <div class="summary-row summary-highlight">
-            <span>{{ t('versement.actualAmount') }}</span>
-            <strong class="text-primary">{{ formatMontant(versementStore.draft.montantVerse) }}</strong>
+            <span>{{ t("versement.actualAmount") }}</span>
+            <strong class="text-primary">{{
+              formatMontant(versementStore.draft.montantVerse)
+            }}</strong>
           </div>
           <div class="summary-row" :class="ecartClass">
-            <span>{{ t('versement.difference') }}</span>
+            <span>{{ t("versement.difference") }}</span>
             <strong>{{ formatMontant(versementStore.draft.ecart) }}</strong>
           </div>
           <div v-if="versementStore.draft.motifEcart" class="summary-row reason-row">
-            <span>{{ t('versement.selectReason') }}</span>
+            <span>{{ t("versement.selectReason") }}</span>
             <em>{{ t(`versement.reasons.${versementStore.draft.motifEcart}`) }}</em>
           </div>
         </div>
 
         <div class="wizard-actions ion-margin-top">
           <ion-button fill="outline" color="medium" @click="versementStore.prevStep">
-            {{ t('common.back') }}
+            {{ t("common.back") }}
           </ion-button>
           <ion-button
             color="success"
@@ -182,9 +229,13 @@
             :disabled="versementStore.isSubmitting"
             @click="handleSubmit"
           >
-            <ion-spinner v-if="versementStore.isSubmitting" name="crescent" slot="start" />
+            <ion-spinner
+              v-if="versementStore.isSubmitting"
+              name="crescent"
+              slot="start"
+            />
             <ion-icon v-else :icon="checkmarkCircleOutline" slot="start" />
-            {{ t('versement.submit') }}
+            {{ t("versement.submit") }}
           </ion-button>
         </div>
       </div>
@@ -194,13 +245,22 @@
         <div class="success-icon-circle">
           <ion-icon :icon="checkmarkOutline" />
         </div>
-        <h2 class="success-title">{{ t('versement.successTitle') }}</h2>
+        <h2 class="success-title">{{ t("versement.successTitle") }}</h2>
         <p class="success-desc">
-          {{ versementStore.isOfflineSaved ? t('versement.offlineSaved') : t('versement.successMessage') }}
+          {{
+            versementStore.isOfflineSaved
+              ? t("versement.offlineSaved")
+              : t("versement.successMessage")
+          }}
         </p>
 
-        <ion-button expand="block" size="large" class="ion-margin-top" @click="finishVersement">
-          {{ t('common.close') }}
+        <ion-button
+          expand="block"
+          size="large"
+          class="ion-margin-top"
+          @click="finishVersement"
+        >
+          {{ t("common.close") }}
         </ion-button>
       </div>
     </ion-content>
@@ -208,9 +268,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
+import { ref, computed } from "vue";
+import { useRouter } from "vue-router";
+import { useI18n } from "vue-i18n";
 import {
   IonPage,
   IonHeader,
@@ -227,15 +287,15 @@ import {
   IonSelectOption,
   IonTextarea,
   IonChip,
-  IonSpinner
-} from '@ionic/vue';
+  IonSpinner,
+} from "@ionic/vue";
 import {
   arrowForwardOutline,
   checkmarkCircleOutline,
-  checkmarkOutline
-} from 'ionicons/icons';
-import { useVersementStore } from '../../stores/versement';
-import { useAuthStore } from '../../stores/auth';
+  checkmarkOutline,
+} from "ionicons/icons";
+import { useVersementStore } from "../../stores/versement";
+import { useAuthStore } from "../../stores/auth";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -250,13 +310,13 @@ if (!versementStore.draft.busId && authStore.activeBus) {
 }
 
 const formatMontant = (val: number) => {
-  return new Intl.NumberFormat('fr-MG').format(val) + ' Ar';
+  return new Intl.NumberFormat("fr-MG").format(val) + " Ar";
 };
 
 const ecartClass = computed(() => {
-  if (versementStore.draft.ecart < 0) return 'ecart-deficit';
-  if (versementStore.draft.ecart > 0) return 'ecart-surplus';
-  return 'ecart-exact';
+  if (versementStore.draft.ecart < 0) return "ecart-deficit";
+  if (versementStore.draft.ecart > 0) return "ecart-surplus";
+  return "ecart-exact";
 });
 
 const onMontantChange = (e: any) => {
@@ -275,7 +335,7 @@ const handleSubmit = async () => {
 
 const finishVersement = () => {
   versementStore.resetDraft();
-  router.replace('/tabs/home');
+  router.replace("/tabs/home");
 };
 </script>
 
@@ -477,6 +537,7 @@ const finishVersement = () => {
 .custom-textarea-item {
   --background: #f8fafc;
   --border-radius: 10px;
+  color: #1a202c;
 }
 
 .wizard-actions {

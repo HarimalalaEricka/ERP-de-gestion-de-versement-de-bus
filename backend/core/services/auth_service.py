@@ -6,6 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from datetime import date 
 from django.db.models import Q
 from core.models import Utilisateur, StatutUtilisateur, Organisation, Affectation, StatutAffectation, RegleVersement
+from core.services.organisation_service import get_by_id
 
 JOURS_FERIES = set()  
 
@@ -34,6 +35,7 @@ def connecter_utilisateur(telephone, password):
             "Ce compte est inactif ou suspendu."
         )
 
+    organisation = get_by_id(utilisateur.organisation_id)
     refresh = RefreshToken.for_user(utilisateur)
 
     utilisateur.derniere_connexion_le = timezone.now()
@@ -62,7 +64,6 @@ def connecter_utilisateur(telephone, password):
             bus_data = {
                 "id": str(bus.id),
                 "organisation_id": str(bus.organisation_id),
-                "numero_immatriculation": bus.numero_immatriculation,
                 "immatriculation": bus.numero_immatriculation,
                 "modele": bus.modele,
                 "marqueModele": bus.modele,
@@ -129,6 +130,17 @@ def connecter_utilisateur(telephone, password):
             "role": utilisateur.role,
             "statut": utilisateur.statut,
             "organisation_id": str(utilisateur.organisation_id),
+            "organisationNom": organisation.nom if organisation else None,
+            "organisation": (
+                {
+                    "id": str(organisation.id),
+                    "nom": organisation.nom,
+                    "telephone": organisation.telephone,
+                    "email": organisation.email,
+                    "est_actif": organisation.est_actif,
+                }
+                if organisation else None
+            ),
         },
         "bus": bus_data,
     }

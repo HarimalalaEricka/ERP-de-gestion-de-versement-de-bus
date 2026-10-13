@@ -126,5 +126,17 @@ class Depense(models.Model):
             models.CheckConstraint(
                 condition=models.Q(montant__gt=0),
                 name="depense_montant_check"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(categorie__in=CategorieDepense.values),
+                name="depense_categorie_check"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(payee_par__in=DepensePayeePar.values),
+                name="depense_payee_par_check"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(statut__in=StatutDepense.values),
+                name="depense_statut_check"
             )
         ]

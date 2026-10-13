@@ -1,7 +1,11 @@
 import datetime
+from django.db import transaction
 from django.db.models import Q, Sum
+from django.utils import timezone
+from rest_framework.exceptions import NotFound
 from core.models import (
     Affectation,
+    StatutBus,
     RegleVersement,
     Dette,
     JourneeService,
@@ -10,6 +14,54 @@ from core.models import (
 )
 
 JOURS_FERIES = set()
+
+
+@transaction.atomic
+def modifier_statut_mon_bus(utilisateur, statut):
+    chauffeur = getattr(utilisateur, "chauffeur", None)
+    if chauffeur is None:
+        raise NotFound("Aucun chauffeur n'est associé à cet utilisateur.")
+
+    aujourdhui = datetime.date.today()
+    affectation = (
+        Affectation.objects
+        .filter(chauffeur=chauffeur, date_debut__lte=aujourdhui)
+        .filter(Q(date_fin__isnull=True) | Q(date_fin__gte=aujourdhui))
+        .select_related("bus")
+        .order_by("-date_debut")
+        .first()
+    )
+    if affectation is None:
+        raise NotFound("Aucun bus n'est affecté à ce chauffeur aujourd'hui.")
+
+    bus = affectation.bus
+    bus.statut = statut
+    bus.save(update_fields=["statut", "modifie_le"])
+
+    resultat = {
+        "id": str(bus.id),
+        "statut": bus.statut,
+        "modifie_le": bus.modifie_le.isoformat(),
+    }
+
+    if statut == StatutBus.ARRETE:
+        journee = JourneeService.objects.filter(
+            bus=bus,
+            chauffeur=chauffeur,
+            date_service=aujourdhui,
+        ).first()
+
+        if journee is not None:
+            journee.statut = StatutJourneeService.TERMINEE
+            journee.terminee_le = timezone.now()
+            journee.save(update_fields=["statut", "terminee_le", "modifie_le"])
+            resultat["journee_service"] = {
+                "id": str(journee.id),
+                "statut": journee.statut,
+                "terminee_le": journee.terminee_le.isoformat(),
+            }
+
+    return resultat
 
 def get_type_jour(jour):
     if jour in JOURS_FERIES:

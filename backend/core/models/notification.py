@@ -74,3 +74,13 @@ class Notification(models.Model):
 
     class Meta:
         db_table = "notifications"
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(type__in=TypeNotification.values),
+                name="notification_type_check"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(canal__in=CanalNotification.values),
+                name="notification_canal_check"
+            ),
+        ]

@@ -75,9 +75,9 @@
           </ion-button>
         </div>
 
-        <div class="demo-hint ion-text-center">
+        <!-- <div class="demo-hint ion-text-center">
           <p class="hint-text">Mode démo chauffeur activé par défaut</p>
-        </div>
+        </div> -->
       </div>
     </ion-content>
   </ion-page>

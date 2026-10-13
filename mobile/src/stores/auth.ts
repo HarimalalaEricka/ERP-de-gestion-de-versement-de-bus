@@ -17,6 +17,8 @@ export interface BusSummary {
   marqueModele: string;
   ligneNom: string;
   montantAttenduJour: number;
+  statut?: string;
+  modifie_le?: string;
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -74,34 +76,6 @@ export const useAuthStore = defineStore('auth', {
       } finally {
         this.isLoading = false;
       }
-      // } catch (err: any) {
-      //   // En mode dev/démo sans backend connecté : connexion mock pour tester l'application
-      //   console.warn('Backend non joignable ou erreur API, bascule en mode démo chauffeur:', err.message);
-        
-      //   // Mock chauffeur par défaut
-      //   this.token = 'demo-jwt-token-chauffeur';
-      //   this.user = {
-      //     id: 'usr-demo-01',
-      //     nom: 'Rakotondrabe',
-      //     prenom: 'Jean',
-      //     telephone: telephone || '034 12 345 67',
-      //     role: 'CHAUFFEUR',
-      //     organisationNom: 'Coopérative Miray'
-      //   };
-      //   this.activeBus = {
-      //     id: 'bus-demo-01',
-      //     immatriculation: '1234 TAB',
-      //     marqueModele: 'Mercedes Sprinter',
-      //     ligneNom: 'Ligne 133 (Ankatso - Analakely)',
-      //     montantAttenduJour: 120000
-      //   };
-
-      //   localStorage.setItem('auth_token', this.token);
-      //   localStorage.setItem('auth_user', JSON.stringify(this.user));
-      //   localStorage.setItem('active_bus', JSON.stringify(this.activeBus));
-      // } finally {
-      //   this.isLoading = false;
-      // }
     },
 
     async fetchMonBus() {
@@ -118,6 +92,23 @@ export const useAuthStore = defineStore('auth', {
       } catch (err) {
         console.warn('Impossible de rafraîchir le bus / dettes :', err);
       }
+    },
+
+    async updateBusStatus(statut: string) {
+      const response = await apiClient.patch('/chauffeur/mon-bus/', {
+        statut
+      });
+
+      if (this.activeBus) {
+        this.activeBus = {
+          ...this.activeBus,
+          statut: response.data.statut,
+          modifie_le: response.data.modifie_le
+        };
+        localStorage.setItem('active_bus', JSON.stringify(this.activeBus));
+      }
+
+      return response.data;
     },
 
     setActiveBus(bus: BusSummary | null) {

@@ -63,5 +63,9 @@ class Affectation(models.Model):
                     )
                 ),
                 name="affectation_dates_check"
+            ),
+            models.CheckConstraint(
+                condition=models.Q(statut__in=StatutAffectation.values),
+                name="affectation_statut_check"
             )
         ]
